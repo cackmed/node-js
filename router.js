@@ -9,4 +9,5 @@ function route(handle, pathname, response, request) {
         response.end();
     }
 }
-exports.route = route;
+const _route = route;
+export { _route as route };

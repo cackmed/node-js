@@ -1,6 +1,6 @@
-const querystring = require('querystring'),
-    fs = require('fs'),
-    formidable = require('formidable');
+// const querystring = require('querystring'),
+import { rename, unlink, createReadStream } from 'fs';
+import { IncomingForm } from 'formidable';
 
 function start(response) {
     console.log("Request handler 'start' was called.");
@@ -26,15 +26,15 @@ function start(response) {
 
 function upload(response, request) {
     console.log("Request handler 'upload' was called.");
-    const form = new formidable.IncomingForm();
+    const form = new IncomingForm();
     console.log('about to parse');
     form.parse(request, function(error, fields, files) {
         console.log('parsing done');
 
-        fs.rename(files.upload.path, '/tmp/test.png', function(error) {
+        rename(files.upload.path, '/tmp/test.png', function(error) {
             if(error) {
-                fs.unlink('/tmp/test.png');
-                fs.rename(files.upload.path, '/tmp/test.png');
+                unlink('/tmp/test.png');
+                rename(files.upload.path, '/tmp/test.png');
             }
         });
         response.writeHead(200, { 'Content-Type': 'text/html' });
@@ -47,9 +47,12 @@ function upload(response, request) {
 function show(response) {
     console.log('Request handler show was called.');
     response.writeHead(200, { 'Content-Type': 'image/png' });
-    fs.createReadStream('/tmp/test.png').pipe(response);
+    createReadStream('/tmp/test.png').pipe(response);
 }
 
-exports.start = start;
-exports.upload = upload;
-exports.show = show;
+const _start = start;
+export { _start as start };
+const _upload = upload;
+export { _upload as upload };
+const _show = show;
+export { _show as show };

@@ -1,11 +1,11 @@
-const server = require('./server');
-const router = require('./router');
-const requestHandlers = require('./request-handlers');
+import { start } from './server';
+import { route } from './router';
+import requestHandlers, { start as _start, upload, show } from './request-handlers';
 
 const handle = {};
 handle['/'] = requestHandlers('./server');
-handle['/start'] = requestHandlers.start;
-handle['/upload'] = requestHandlers.upload;
-handle['/show'] = requestHandlers.show;
+handle['/start'] = _start;
+handle['/upload'] = upload;
+handle['/show'] = show;
 
-server.start(router.route, handle);
+start(route, handle);
